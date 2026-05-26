@@ -4,6 +4,9 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import authRoutes from './routes/authRoutes.js'
 import { seedAdmin } from './scripts/seedAdmin.js'
+import { seedFacilities } from './scripts/seedFacilities.js'
+import facilityRoutes from './routes/facilityRoutes.js'
+import adminRoutes from './routes/adminRoutes.js'
 
 dotenv.config()
 
@@ -18,6 +21,8 @@ app.get('/api/health', (req, res) => {
 })
 
 app.use('/api/auth', authRoutes)
+app.use('/api', facilityRoutes)
+app.use('/api/admin', adminRoutes)
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' })
@@ -29,6 +34,7 @@ const startServer = async () => {
     console.log('MongoDB connected')
 
     await seedAdmin()
+    await seedFacilities()
 
     app.listen(port, () => {
       console.log(`Server running on port ${port}`)

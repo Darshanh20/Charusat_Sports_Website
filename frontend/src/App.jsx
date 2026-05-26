@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import FacilitiesPage from './pages/FacilitiesPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
+import FacilityManagement from './pages/admin/FacilityManagement'
 import PrivateRoute from './components/PrivateRoute'
 import { getStoredAuth } from './utils/auth'
 
@@ -39,6 +40,14 @@ function App() {
         element={
           <PrivateRoute requiredRole="admin">
             <AdminDashboardPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/facilities"
+        element={
+          <PrivateRoute requiredRole="admin">
+            <FacilityManagement />
           </PrivateRoute>
         }
       />
