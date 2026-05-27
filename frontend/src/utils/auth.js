@@ -9,7 +9,7 @@ export const decodeToken = (token) => {
   try {
     const [, payload] = token.split('.')
     return JSON.parse(base64UrlDecode(payload))
-  } catch (error) {
+  } catch {
     return null
   }
 }
@@ -43,9 +43,37 @@ export const getStoredAuth = () => {
 }
 
 export const getRedirectPathForRole = (role) => {
+  if (role === 'external') {
+    return '/org/dashboard'
+  }
+
   if (role === 'admin') {
     return '/admin/dashboard'
   }
 
   return '/facilities'
+}
+
+export const getStoredProfile = () => {
+  const auth = getStoredAuth()
+
+  if (!auth) {
+    return null
+  }
+
+  const isExternal = auth.role === 'external'
+  const displayName = isExternal ? auth.org_name || auth.full_name || 'External Partner' : auth.full_name || 'CHARUSAT Member'
+  const subtitle = isExternal ? 'External Partner' : auth.university_id ? `STUDENT ID: ${auth.university_id}` : 'Internal Member'
+
+  return {
+    ...auth,
+    displayName,
+    subtitle,
+    avatarText: displayName
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase())
+      .join(''),
+  }
 }

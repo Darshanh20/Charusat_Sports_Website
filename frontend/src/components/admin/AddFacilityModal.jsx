@@ -17,6 +17,7 @@ const initialForm = {
   operating_end: '',
   slot_duration_minutes: 60,
   buffer_minutes: 0,
+  max_slots_per_booking: 4,
   image_url: '',
 }
 
@@ -29,6 +30,7 @@ const toPayload = (form) => ({
   internal_rate_per_hour: Number(form.internal_rate_per_hour),
   slot_duration_minutes: Number(form.slot_duration_minutes),
   buffer_minutes: Number(form.buffer_minutes),
+  max_slots_per_booking: Number(form.max_slots_per_booking || 4),
   image_url: form.image_url.trim() || null,
 })
 
@@ -75,7 +77,8 @@ function AddFacilityModal({ isOpen, onClose, onSuccess }) {
     if (form.operating_start && form.operating_end && !isLaterTime(form.operating_start, form.operating_end)) {
       nextErrors.operating_end = 'Operating end must be later than operating start.'
     }
-    if (!form.slot_duration_minutes || Number(form.slot_duration_minutes) <= 0) nextErrors.slot_duration_minutes = 'Slot duration is required.'
+    if (form.slot_duration_minutes === '' || Number(form.slot_duration_minutes) < 15) nextErrors.slot_duration_minutes = 'Slot duration is required.'
+    if (!form.max_slots_per_booking || Number(form.max_slots_per_booking) < 1) nextErrors.max_slots_per_booking = 'Max slots per booking is required.'
     if (form.buffer_minutes === '' || Number(form.buffer_minutes) < 0) nextErrors.buffer_minutes = 'Buffer must be zero or greater.'
 
     setErrors(nextErrors)

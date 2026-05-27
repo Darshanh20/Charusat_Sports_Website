@@ -1,11 +1,13 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
-import FacilitiesPage from './pages/FacilitiesPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
 import FacilityManagement from './pages/admin/FacilityManagement'
 import PrivateRoute from './components/PrivateRoute'
-import { getStoredAuth } from './utils/auth'
+import { getRedirectPathForRole, getStoredAuth } from './utils/auth'
+import FacilityListing from './pages/FacilityListing'
+import FacilityDetail from './pages/FacilityDetail'
+import OrgDashboard from './pages/external/OrgDashboard'
 
 function RootRedirect() {
   const auth = getStoredAuth()
@@ -14,11 +16,7 @@ function RootRedirect() {
     return <Navigate to="/login" replace />
   }
 
-  return auth.role === 'admin' ? (
-    <Navigate to="/admin/dashboard" replace />
-  ) : (
-    <Navigate to="/facilities" replace />
-  )
+  return <Navigate to={getRedirectPathForRole(auth.role)} replace />
 }
 
 function App() {
@@ -31,7 +29,31 @@ function App() {
         path="/facilities"
         element={
           <PrivateRoute>
-            <FacilitiesPage />
+            <FacilityListing />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/facilities/:id"
+        element={
+          <PrivateRoute>
+            <FacilityDetail />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/org/dashboard"
+        element={
+          <PrivateRoute allowedRoles={["external"]} forbiddenTo="/facilities">
+            <OrgDashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/my-bookings"
+        element={
+          <PrivateRoute allowedRoles={["internal", "external"]}>
+            <OrgDashboard />
           </PrivateRoute>
         }
       />

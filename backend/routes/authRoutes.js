@@ -26,9 +26,22 @@ const allowedDepartments = [
 ]
 
 const createToken = (user) =>
-  jwt.sign({ id: user._id.toString(), role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '1h',
-  })
+  jwt.sign(
+    {
+      id: user._id.toString(),
+      role: user.role,
+      full_name: user.full_name,
+      university_id: user.university_id || null,
+      department: user.department || null,
+      org_name: user.org_name || null,
+      contact_person: user.contact_person || null,
+      phone: user.phone || null,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN || '1h',
+    },
+  )
 
 const buildAuthResponse = (user) => ({
   token: createToken(user),

@@ -103,10 +103,17 @@ function FacilityFormFields({ form, errors, onChange }) {
       </label>
 
       <label className="block">
-        <span className="text-sm font-medium text-slate-700">Slot Duration in minutes</span>
-        <input name="slot_duration_minutes" type="number" min="1" value={form.slot_duration_minutes} onChange={onChange} className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-emerald-600" />
-        <p className="mt-2 text-xs text-slate-500">e.g. 30 for Table Tennis, 60 for Badminton, 120 for Cricket</p>
+        <span className="text-sm font-medium text-slate-700">Slot Duration (minutes)</span>
+        <input name="slot_duration_minutes" type="number" min="15" max="480" placeholder="e.g. 60" value={form.slot_duration_minutes ?? 60} onChange={onChange} className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-emerald-600" />
+        <p className="mt-2 text-xs text-slate-500">Duration of each individual slot. e.g. 30 for Table Tennis, 60 for Badminton, 120 for Cricket</p>
         <FieldError error={errors.slot_duration_minutes} />
+      </label>
+
+      <label className="block">
+        <span className="text-sm font-medium text-slate-700">Max Slots Per Booking</span>
+        <input name="max_slots_per_booking" type="number" min="1" max="10" value={form.max_slots_per_booking ?? 4} onChange={onChange} className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-emerald-600" />
+        <p className="mt-2 text-xs text-slate-500">Maximum consecutive slots a single user can book at one time. e.g. 4 means user can book up to 4 consecutive 1-hour slots</p>
+        <FieldError error={errors.max_slots_per_booking} />
       </label>
 
       <label className="block">

@@ -62,6 +62,7 @@ export const createFacility = async (req, res) => {
       operating_end,
       slot_duration_minutes = 60,
       buffer_minutes = 0,
+      max_slots_per_booking = 4,
       image_url,
       icon_type,
     } = req.body
@@ -84,6 +85,7 @@ export const createFacility = async (req, res) => {
       operating_end,
       slot_duration_minutes,
       buffer_minutes,
+      max_slots_per_booking,
       image_url: image_url ?? null,
       icon_type: icon_type ?? null,
       created_by: req.user._id,
@@ -111,6 +113,7 @@ export const updateFacility = async (req, res) => {
       operating_end,
       slot_duration_minutes = 60,
       buffer_minutes = 0,
+      max_slots_per_booking = 4,
       image_url,
       icon_type,
     } = req.body
@@ -135,6 +138,7 @@ export const updateFacility = async (req, res) => {
         operating_end,
         slot_duration_minutes,
         buffer_minutes,
+        max_slots_per_booking,
         image_url: image_url ?? null,
         icon_type: icon_type ?? null,
       },
@@ -320,11 +324,17 @@ export const getFacilityAvailability = async (req, res) => {
       const slotStartDateTime = parseDateTime(date, slot.start)
       const slotEndDateTime = parseDateTime(date, slot.end)
 
-      const isBooked = bookings.some((booking) => isBookingOverlap(slotStartMinutes, slotEndMinutes, booking))
+      const overlappingBookings = bookings.filter((booking) => isBookingOverlap(slotStartMinutes, slotEndMinutes, booking))
+      const hasPendingBooking = overlappingBookings.some((booking) => booking.status === 'pending_approval')
+      const hasConfirmedBooking = overlappingBookings.some((booking) => ['approved', 'confirmed'].includes(booking.status))
       const isBlocked = blockedSlots.some((blockedSlot) => isBlockedOverlap(slotStartDateTime, slotEndDateTime, blockedSlot))
 
-      if (isBooked) {
-        return { ...slot, status: 'booked' }
+      if (hasPendingBooking) {
+        return { ...slot, status: 'pending', booking_status: 'pending_approval' }
+      }
+
+      if (hasConfirmedBooking) {
+        return { ...slot, status: 'booked', booking_status: 'confirmed' }
       }
 
       if (isBlocked) {
@@ -340,6 +350,7 @@ export const getFacilityAvailability = async (req, res) => {
       date,
       slot_duration_minutes: facility.slot_duration_minutes,
       buffer_minutes: facility.buffer_minutes,
+      max_slots_per_booking: facility.max_slots_per_booking || 4,
       slots,
     })
   } catch (error) {

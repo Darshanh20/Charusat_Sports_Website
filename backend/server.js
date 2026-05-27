@@ -7,6 +7,7 @@ import { seedAdmin } from './scripts/seedAdmin.js'
 import { seedFacilities } from './scripts/seedFacilities.js'
 import facilityRoutes from './routes/facilityRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
+import bookingRoutes from './routes/bookingRoutes.js'
 
 dotenv.config()
 
@@ -23,6 +24,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api', facilityRoutes)
 app.use('/api/admin', adminRoutes)
+app.use('/api', bookingRoutes)
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' })

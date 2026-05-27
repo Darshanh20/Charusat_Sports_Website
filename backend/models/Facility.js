@@ -52,6 +52,12 @@ const facilitySchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    max_slots_per_booking: {
+      type: Number,
+      default: 4,
+      min: 1,
+      max: 10,
+    },
     is_free_for_internal: {
       type: Boolean,
       default: true,

@@ -1,16 +1,18 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { getStoredAuth } from '../utils/auth'
 
-function PrivateRoute({ children, requiredRole }) {
+function PrivateRoute({ children, requiredRole, allowedRoles, unauthenticatedTo = '/login', forbiddenTo = '/facilities' }) {
   const location = useLocation()
   const auth = getStoredAuth()
 
   if (!auth) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+    return <Navigate to={unauthenticatedTo} replace state={{ from: location.pathname }} />
   }
 
-  if (requiredRole && auth.role !== requiredRole) {
-    return <Navigate to="/facilities" replace />
+  const roles = allowedRoles || (requiredRole ? [requiredRole] : null)
+
+  if (roles && !roles.includes(auth.role)) {
+    return <Navigate to={forbiddenTo} replace />
   }
 
   return children

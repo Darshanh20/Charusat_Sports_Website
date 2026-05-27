@@ -14,6 +14,7 @@ const facilities = [
     operating_end: '21:00',
     slot_duration_minutes: 120,
     buffer_minutes: 15,
+    max_slots_per_booking: 2,
   },
   {
     name: 'Badminton Court 1',
@@ -27,6 +28,7 @@ const facilities = [
     operating_end: '22:00',
     slot_duration_minutes: 60,
     buffer_minutes: 10,
+    max_slots_per_booking: 4,
   },
   {
     name: 'Table Tennis Hall',
@@ -40,6 +42,7 @@ const facilities = [
     operating_end: '20:00',
     slot_duration_minutes: 30,
     buffer_minutes: 5,
+    max_slots_per_booking: 4,
   },
   {
     name: 'Gymnasium',
@@ -53,6 +56,21 @@ const facilities = [
     operating_end: '21:00',
     slot_duration_minutes: 60,
     buffer_minutes: 0,
+    max_slots_per_booking: 3,
+  },
+  {
+    name: 'Box Cricket',
+    subtitle: 'Small-sided cricket pitch',
+    category: 'indoor',
+    sport_type: 'Cricket',
+    location: 'Sports Complex Block C',
+    capacity: 12,
+    ext_rate_per_hour: 800,
+    operating_start: '08:00',
+    operating_end: '22:00',
+    slot_duration_minutes: 60,
+    buffer_minutes: 10,
+    max_slots_per_booking: 3,
   },
 ]
 
